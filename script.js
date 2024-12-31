@@ -1,93 +1,110 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const productos = {
-        herramientas: [
-            { 
-                nombre: "Martillo", 
-                descripcion: ["Cabeza de acero resistente", "Mango ergonómico", "Ideal para carpintería"],
-                imagen: "marttillos.jpeg"
-            },
-            { 
-                nombre: "Destornillador", 
-                descripcion: ["Punta magnética", "Mango antideslizante", "Tamaño estándar"],
-                imagen: "tornillos.jpeg"
-            },
-            { 
-                nombre: "Llave inglesa", 
-                descripcion: ["Ajustable para diferentes tamaños", "Material de acero inoxidable", "Durabilidad garantizada"],
-                 imagen: "llave inglesa.jpg"
-            }
-        ],
-        materiales: [
-            { 
-                nombre: "Cemento", 
-                descripcion: ["Bolsa de 50kg", "Alta resistencia", "Fácil aplicación"],
-                imagen: "cemento.jpeg"
-            },
-            { 
-                nombre: "Madera", 
-                descripcion: ["Madera tratada", "Alta calidad", "Ideal para interiores"],
-                 imagen: "madera.jpeg"
-            },
-            { 
-                nombre: "Acero", 
-                descripcion: ["Barras de refuerzo", "Resistencia a la corrosión", "Usos estructurales"],
-                imagen: "acero.jpeg"
-            }
-        ],
-        accesorios: [
-            { 
-                nombre: "Clavos", 
-                descripcion: ["Paquete de 500 unidades", "Material galvanizado", "Resistente a la oxidación"],
-                 imagen: "clavos.jpeg"
-            },
-            { 
-                nombre: "Tornillos", 
-                descripcion: ["Set de 200 piezas", "Diferentes tamaños", "Ideal para madera y metal"],
-                 imagen: "tornillos.jpeg"
-            },
-            { 
-                nombre: "Abrazaderas", 
-                descripcion: ["Fabricadas en acero inoxidable", "Fáciles de instalar", "Alta durabilidad"],
-                 imagen: "abrazadera.jpeg"
-            }
-        ]
-    };
+//B1 
+const btnEmpezar = document.getElementById("btn-empezar");
+const pantallaInicial = document.getElementById("pantalla-inicial");
+const pantallaCuenta = document.getElementById("pantalla-cuenta");
+const contador = document.getElementById("contador");
+const pantallaNegra = document.getElementById("pantalla-negra");
+const tarjeta = document.getElementById("tarjeta");
+const audio = document.getElementById("audio");
+const confetiCanvas = document.getElementById("confeti");
 
-    const featureElements = document.querySelectorAll(".feature");
-    const productosLista = document.getElementById("productos-lista");
-    const productoDetalle = document.getElementById("producto-detalle");
+let confetiCtx = confetiCanvas.getContext("2d");
+let confetiPieces = [];
 
-    featureElements.forEach(feature => {
-        feature.addEventListener("click", () => {
-            const category = feature.getAttribute("data-category");
-            mostrarProductos(productos[category]);
-        });
-    });
-
-    function mostrarProductos(listaProductos) {
-        productosLista.innerHTML = "<ul>" + listaProductos.map(producto => `
-            <li data-nombre="${producto.nombre}">
-                <img src="${producto.imagen}" alt="${producto.nombre}">
-                ${producto.nombre}
-            </li>`).join("") + "</ul>";
-        productosLista.classList.remove("hidden");
-        productoDetalle.classList.add("hidden");
-
-        const productItems = productosLista.querySelectorAll("li");
-        productItems.forEach(item => {
-            item.addEventListener("click", () => {
-                const nombreProducto = item.getAttribute("data-nombre");
-                const producto = listaProductos.find(p => p.nombre === nombreProducto);
-                mostrarDetalleProducto(producto);
-            });
-        });
-    }
-
-    function mostrarDetalleProducto(producto) {
-        productoDetalle.innerHTML = `
-            <img src="${producto.imagen}" alt="${producto.nombre}">
-            <h3>${producto.nombre}</h3>
-            <ul>${producto.descripcion.map(detalle => `<li>${detalle}</li>`).join("")}</ul>`;
-        productoDetalle.classList.remove("hidden");
-    }
+// B2
+btnEmpezar.addEventListener("click", () => {
+  pantallaInicial.classList.add("oculto"); // B-2.1
+  pantallaCuenta.classList.remove("oculto"); // B-2.2
+  iniciarCuentaRegresiva();
 });
+
+// B3
+function iniciarCuentaRegresiva() {
+  let tiempo = 5; // TIME
+  contador.textContent = tiempo;
+
+  const intervalo = setInterval(() => {
+    tiempo--;
+    contador.textContent = tiempo;
+
+    if (tiempo === 0) {
+      clearInterval(intervalo);
+      pantallaCuenta.classList.add("oculto");
+      mostrarPantallaNegra();
+    }
+  }, 1000); // B4
+
+// B5
+function mostrarPantallaNegra() {
+  pantallaNegra.classList.remove("oculto");
+  audio.play();
+  audio.addEventListener("ended", lanzarConfeti); // B6
+}
+
+// B7
+function lanzarConfeti() {
+  confetiCanvas.classList.remove("oculto");
+  generarConfeti();
+
+  setTimeout(() => {
+    explotarConfeti();
+  }, 4000); // B8
+}
+
+// B9
+function generarConfeti() {
+  const colores = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff", "#00ffff"];
+  for (let i = 0; i < 200; i++) {
+    confetiPieces.push({
+      x: Math.random() * confetiCanvas.width,
+      y: Math.random() * confetiCanvas.height - confetiCanvas.height,
+      color: colores[Math.floor(Math.random() * colores.length)],
+      size: Math.random() * 5 + 5,
+      velocityX: Math.random() * 2 - 1,
+      velocityY: Math.random() * 3 + 2,
+    });
+  }
+
+  requestAnimationFrame(animarConfeti);
+}
+
+// B10a
+function animarConfeti() {
+  confetiCtx.clearRect(0, 0, confetiCanvas.width, confetiCanvas.height);
+
+  confetiPieces.forEach((confeti) => {
+    confeti.x += confeti.velocityX;
+    confeti.y += confeti.velocityY;
+
+    confetiCtx.fillStyle = confeti.color;
+    confetiCtx.fillRect(confeti.x, confeti.y, confeti.size, confeti.size);
+  });
+
+  requestAnimationFrame(animarConfeti);
+}
+
+// END
+function explotarConfeti() {
+  confetiPieces = []; 
+  confetiCtx.clearRect(0, 0, confetiCanvas.width, confetiCanvas.height);
+  tarjeta.classList.add("oculto"); 
+
+ 
+  const explosionDiv = document.createElement("div");
+  explosionDiv.classList.add("explosion");
+  document.body.appendChild(explosionDiv);
+
+  setTimeout(() => {
+    explosionDiv.remove(); 
+    window.close(); 
+  }, 2000);
+}
+
+// Z1
+window.addEventListener("resize", ajustarCanvas);
+function ajustarCanvas() {
+  confetiCanvas.width = window.innerWidth;
+  confetiCanvas.height = window.innerHeight;
+}
+
+ajustarCanvas();  }
