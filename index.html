@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Ferretería "Prueba"</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Ferretería "Prueba"</h1>
+    </header>
+    <nav><
+        <a href="#nosotros">Nosotros</a>
+        <a href="#productos">Productos</a>
+        <a href="#contacto">Contacto</a>
+    </nav>
+    <section class="hero">
+        <h2>Los Mejores Materiales para tus Proyectos</h2>
+        <button id="scrollProductos">Ver Productos</button>
+    </section>
+    <div class="container">
+        <section id="nosotros">
+            <h2>¿Quiénes Somos?</h2>
+            <p>En Ferretería "Prueba" somos líderes en el suministro de materiales de construcción y herramientas de alta calidad.</p>
+        </section>
+        <section id="productos">
+            <h2>Nuestros Productos</h2>
+            <div class="features">
+                <div class="feature" data-category="herramientas">
+                    <img src="FOTOS/herramientas.jpeg" alt="Herramientas">
+                    <h3>Herramientas</h3>
+                </div>
+                <div class="feature" data-category="materiales">
+                    <img src="FOTOS/materiales.jpeg" alt="Materiales">
+                    <h3>Materiales</h3>
+                </div>
+                <div class="feature" data-category="accesorios">
+                    <img src="FOTOS/accesorios.jpeg" alt="Accesorios">
+                    <h3>Accesorios</h3>
+                </div>
+            </div>
+            <!-- Aquí se mostrarán las listas de productos al seleccionar una categoría -->
+            <div id="productos-lista" class="productos-lista hidden"></div>
+            <!-- Aquí se mostrará el detalle del producto seleccionado -->
+            <div id="producto-detalle" class="producto-detalle hidden"></div>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; 2024 Ferretería "Prueba". Todos los derechos reservados.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
